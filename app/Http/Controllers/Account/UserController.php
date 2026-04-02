@@ -132,8 +132,12 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
-        //
+        if ($user->profile_picture_path && Storage::disk('public')->exists($user->profile_picture_path)) {
+            Storage::disk('public')->delete($user->profile_picture_path);
+        }
+        $user->delete();
+        return redirect()->route('dashboard.admin.account.users.index')->with('success', 'Berhasil menghapus data pengguna.');
     }
 }
