@@ -28,7 +28,9 @@ class IndexRequest extends FormRequest
         return [
             'limit' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:100'],
             'email' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'role' => ['sometimes', 'nullable', Rule::enum(RoleEnum::class)]
+            'role' => ['sometimes', 'nullable', Rule::enum(RoleEnum::class)],
+            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'phone' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 }

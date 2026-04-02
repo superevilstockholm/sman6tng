@@ -29,6 +29,16 @@ class UserController extends Controller
         if (!empty($validated['role'])) {
             $query->where('role', $validated['role']);
         }
+        if (!empty($validated['name'])) {
+            $query->whereHas('profile', function ($q) use ($validated) {
+                $q->where('name', 'ILIKE', '%' . $validated['name'] . '%');
+            });
+        }
+        if (!empty($validated['phone'])) {
+            $query->whereHas('profile', function ($q) use ($validated) {
+                $q->where('phone', 'ILIKE', '%' . $validated['phone'] . '%');
+            });
+        }
 
         $users = $query->paginate($limit)
             ->appends($request->except('page'));
