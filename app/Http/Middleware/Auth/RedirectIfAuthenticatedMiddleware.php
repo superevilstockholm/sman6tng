@@ -16,7 +16,7 @@ class RedirectIfAuthenticatedMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if ($user = $request->user()) {
-            return redirect()->route('dashboard.' . $user->role->value . '.index')->with('warning', 'Anda sudah login.');
+            return redirect()->route('dashboard.' . $user->role->value . '.index')->with('warning', 'Anda sudah masuk.');
         }
         return $next($request);
     }

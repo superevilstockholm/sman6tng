@@ -2,11 +2,16 @@
 
 use Illuminate\Support\Facades\Route;
 
+// Auth Controller
+use App\Http\Controllers\AuthController;
+
 // Account Controllers
 use App\Http\Controllers\Account\UserController;
 
 Route::middleware(['guest'])->group(function () {
-
+    // Auth
+    Route::get('login', [AuthController::class, 'login_view'])->name('login');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
 });
 
 // Protected
