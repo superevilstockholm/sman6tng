@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Account;
 
 use Illuminate\View\View;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 
 // Models
 use App\Models\Account\User;
@@ -14,6 +14,7 @@ use App\Models\Account\User;
 // Requests
 use App\Http\Requests\Account\User\IndexRequest;
 use App\Http\Requests\Account\User\StoreRequest;
+use App\Http\Requests\Account\User\UpdateRequest;
 
 class UserController extends Controller
 {
@@ -68,12 +69,10 @@ class UserController extends Controller
 
         DB::transaction(function () use ($validated) {
             $user = User::create($validated);
-            $user->profile()->create([
-                'name' => $validated['name'],
-            ]);
+            $user->profile()->create($validated);
         });
 
-        return redirect()->route('dashboard.admin.account.users.index')->with('success', 'Berhasil menambahkan user.');
+        return redirect()->route('dashboard.admin.account.users.index')->with('success', 'Berhasil membuat data pengguna.');
     }
 
     /**
@@ -89,17 +88,45 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(User $user)
+    public function edit(User $user): View
     {
-        //
+        return view('pages.dashboard.admin.account.user.edit', [
+            'user' => $user->load(['profile']),
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UpdateRequest $request, User $user): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        if ($request->boolean('delete_profile_picture')) {
+            if ($user->profile_picture_path && Storage::disk('public')->exists($user->profile_picture_path)) {
+                Storage::disk('public')->delete($user->profile_picture_path);
+            }
+        }
+
+        if ($request->hasFile('profile_picture')) {
+            if ($user->profile_picture_path && Storage::disk('public')->exists($user->profile_picture_path)) {
+                Storage::disk('public')->delete($user->profile_picture_path);
+            }
+            $validated['profile_picture_path'] = $request->file('profile_picture')->store('account/profile-pictures', 'public');
+        }
+
+        unset($validated['profile_picture'], $validated['delete_profile_picture']);
+
+        if (empty($validated['password'])) {
+            unset($validated['password']);
+        }
+
+        DB::transaction(function () use ($validated, $user) {
+            $user->update($validated);
+            $user->profile()->updateOrCreate($validated);
+        });
+
+        return redirect()->route('dashboard.admin.account.users.index')->with('success', 'Berhasil mengubah data pengguna.');
     }
 
     /**
