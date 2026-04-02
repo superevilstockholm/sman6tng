@@ -31,4 +31,12 @@ class AuthController extends Controller
         $request->session()->regenerate();
         return redirect()->route('dashboard.' . $request->user()->role->value . '.index')->with('success', 'Berhasil masuk.');
     }
+
+    public function logout(Request $request): RedirectResponse
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login')->with('success', 'Berhasil keluar.');
+    }
 }

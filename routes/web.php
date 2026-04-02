@@ -16,6 +16,8 @@ Route::middleware(['guest'])->group(function () {
 
 // Protected
 Route::middleware(['auth'])->group(function () {
+    // Auth
+    Route::post('logout', [AuthController::class, 'logout'])->name('logout');
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', function () {
