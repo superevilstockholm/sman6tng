@@ -2,6 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
+// Account Controllers
+use App\Http\Controllers\Account\UserController;
+
+// Protected
+Route::middleware(['auth'])->group(function () {
+    Route::prefix('account')->name('account.')->group(function () {
+        Route::resource('users', UserController::class)->parameters([
+            'users' => 'user',
+        ]);
+    });
 });
