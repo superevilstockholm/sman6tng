@@ -24,7 +24,7 @@ class UserController extends Controller
     {
         $validated = $request->validated();
         $limit = $validated['limit'] ?? 10;
-        $query = User::query()->with('profile');
+        $query = User::query()->with(['profile']);
 
         if (!empty($validated['email'])) {
             $query->where('email', 'ILIKE', '%' . $validated['email'] . '%');
@@ -79,9 +79,11 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(User $user)
+    public function show(User $user): View
     {
-        //
+        return view('pages.dashboard.admin.account.user.show', [
+            'user' => $user->load(['profile']),
+        ]);
     }
 
     /**
