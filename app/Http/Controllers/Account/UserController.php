@@ -4,13 +4,16 @@ namespace App\Http\Controllers\Account;
 
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\RedirectResponse;
 
 // Models
 use App\Models\Account\User;
 
 // Requests
 use App\Http\Requests\Account\User\IndexRequest;
+use App\Http\Requests\Account\User\StoreRequest;
 
 class UserController extends Controller
 {
@@ -51,17 +54,26 @@ class UserController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(): View
     {
-        //
+        return view('pages.dashboard.admin.account.user.create');
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request): RedirectResponse
     {
-        //
+        $validated = $request->validated();
+
+        DB::transaction(function () use ($validated) {
+            $user = User::create($validated);
+            $user->profile()->create([
+                'name' => $validated['name'],
+            ]);
+        });
+
+        return redirect()->route('dashboard.admin.account.users.index')->with('success', 'Berhasil menambahkan user.');
     }
 
     /**

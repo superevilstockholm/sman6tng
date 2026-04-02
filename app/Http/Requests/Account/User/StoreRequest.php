@@ -5,10 +5,10 @@ namespace App\Http\Requests\Account\User;
 use Illuminate\Validation\Rule;
 use Illuminate\Foundation\Http\FormRequest;
 
-// Enums
-use App\Enums\RoleEnum;
+// Models
+use App\Models\Account\User;
 
-class IndexRequest extends FormRequest
+class StoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,11 +26,9 @@ class IndexRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'limit' => ['sometimes', 'nullable', 'integer', 'min:1', 'max:100'],
-            'email' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'role' => ['sometimes', 'nullable', Rule::enum(RoleEnum::class)],
-            'name' => ['sometimes', 'nullable', 'string', 'max:255'],
-            'phone' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique(User::class, 'email')],
+            'password' => ['required', 'string', 'min:8', 'max:255', 'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/'],
+            'name' => ['required', 'string', 'max:255'],
         ];
     }
 
