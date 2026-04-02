@@ -123,7 +123,7 @@ class UserController extends Controller
 
         DB::transaction(function () use ($validated, $user) {
             $user->update($validated);
-            $user->profile()->updateOrCreate($validated);
+            $user->profile()->updateOrCreate([], $validated);
         });
 
         return redirect()->route('dashboard.admin.account.users.index')->with('success', 'Berhasil mengubah data pengguna.');
