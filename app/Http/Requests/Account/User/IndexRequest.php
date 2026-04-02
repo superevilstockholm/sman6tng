@@ -38,7 +38,20 @@ class IndexRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'limit.integer' => 'Limit harus berupa angka.',
+            'limit.min' => 'Limit minimal adalah 1.',
+            'limit.max' => 'Limit maksimal adalah 100.',
 
+            'email.string' => 'Email harus berupa teks.',
+            'email.max' => 'Email maksimal 255 karakter.',
+
+            'role.enum' => 'Role yang dipilih tidak valid.',
+
+            'name.string' => 'Nama harus berupa teks.',
+            'name.max' => 'Nama maksimal 255 karakter.',
+
+            'phone.string' => 'Nomor telepon harus berupa teks.',
+            'phone.max' => 'Nomor telepon maksimal 255 karakter.',
         ];
     }
 }
