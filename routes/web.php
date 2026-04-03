@@ -13,6 +13,10 @@ use App\Http\Controllers\ProfileController;
 // Account Controllers
 use App\Http\Controllers\Account\UserController;
 
+Route::get('/', function () {
+    return view('pages.index');
+});
+
 Route::middleware(['guest'])->group(function () {
     // Auth
     Route::prefix('login')->controller(LoginController::class)->name('login.')->group(function () {
