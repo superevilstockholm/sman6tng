@@ -34,4 +34,11 @@ class UpdateRequest extends FormRequest
             'delete_profile_picture' => ['sometimes', 'nullable', 'boolean'],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+
+        ];
+    }
 }

@@ -9,6 +9,7 @@ use Illuminate\Http\RedirectResponse;
 
 // Requests
 use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\UpdatePasswordRequest;
 
 class AuthController extends Controller
 {
@@ -38,5 +39,22 @@ class AuthController extends Controller
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('login')->with('success', 'Berhasil keluar.');
+    }
+
+    public function edit_password(): View
+    {
+        return view('pages.auth.reset-password');
+    }
+
+    public function update_password(UpdatePasswordRequest $request): RedirectResponse
+    {
+        $validated = $request->validated();
+        $user = $request->user();
+
+        $user->update([
+            'password' => $validated['new_password'],
+        ]);
+
+        return back()->with('success', 'Berhasil memperbarui password.');
     }
 }
