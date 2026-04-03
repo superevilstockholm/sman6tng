@@ -13,19 +13,25 @@ use App\Http\Controllers\Account\UserController;
 
 Route::middleware(['guest'])->group(function () {
     // Auth
-    Route::get('login', [AuthController::class, 'login_view'])->name('login');
-    Route::post('login', [AuthController::class, 'login'])->name('login');
+    Route::prefix('login')->name('login.')->group(function () {
+        Route::get('/', [AuthController::class, 'login_view'])->name('view');
+        Route::post('/', [AuthController::class, 'login'])->name('attempt');
+    });
 });
 
 // Protected
 Route::middleware(['auth'])->group(function () {
     // Auth
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    Route::prefix('password')->name('password.')->group(function () {
+        Route::get('/edit', [AuthController::class, 'edit_password'])->name('edit');
+        Route::patch('/update', [AuthController::class, 'update_password'])->name('update');
+    });
     // Profile
     Route::prefix('profile')->name('profile.')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('index');
         Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
-        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+        Route::put('/update', [ProfileController::class, 'update'])->name('update');
     });
     // Dashboard
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
