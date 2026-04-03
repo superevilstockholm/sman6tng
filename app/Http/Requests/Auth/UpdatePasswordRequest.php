@@ -30,7 +30,14 @@ class UpdatePasswordRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'old_password.required' => 'Password lama wajib diisi.',
+            'old_password.current_password' => 'Password lama tidak sesuai.',
 
+            'new_password.required' => 'Password baru wajib diisi.',
+            'new_password.string' => 'Password baru harus berupa teks.',
+            'new_password.min' => 'Password baru minimal :min karakter.',
+            'new_password.max' => 'Password baru maksimal :max karakter.',
+            'new_password.regex' => 'Password baru harus mengandung huruf kecil, huruf besar, angka, dan simbol.',
         ];
     }
 }

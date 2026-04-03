@@ -30,7 +30,13 @@ class LoginRequest extends FormRequest
     public function messages(): array
     {
         return [
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email maksimal :max karakter.',
 
+            'password.required' => 'Password wajib diisi.',
+            'password.string' => 'Password harus berupa teks.',
+            'password.max' => 'Password maksimal :max karakter.',
         ];
     }
 }
