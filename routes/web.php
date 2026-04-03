@@ -5,6 +5,9 @@ use Illuminate\Support\Facades\Route;
 // Auth Controller
 use App\Http\Controllers\AuthController;
 
+// Profile Controller
+use App\Http\Controllers\ProfileController;
+
 // Account Controllers
 use App\Http\Controllers\Account\UserController;
 
@@ -18,6 +21,13 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     // Auth
     Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    // Profile
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('index');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+        Route::post('/update', [ProfileController::class, 'update'])->name('update');
+    });
+    // Dashboard
     Route::prefix('dashboard')->name('dashboard.')->group(function () {
         Route::middleware(['role:admin'])->prefix('admin')->name('admin.')->group(function () {
             Route::get('/', function () {
